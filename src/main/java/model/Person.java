@@ -146,10 +146,18 @@ public class Person {
         } else {
             //if the the bff doesn't exist in the database, we create it and set its bff to the current person
             if (!this.exists(this.bff)) {
-                Put putBff = new Put(this.bff);
-                putBff.addColumn(FRIENDS, BFF_COL, this.name);
-                table.put(putBff);
-                System.out.println("\tSuccess: The person " + this.bffStr + " has been correctly inserted in the database.");
+                // we check that the bff's name is not the same as the person's name
+                if(!bffStr.equals(nameStr)) {
+                    Put putBff = new Put(this.bff);
+                    putBff.addColumn(FRIENDS, BFF_COL, this.name);
+                    table.put(putBff);
+                    System.out.println("\tSuccess: The person " + this.bffStr +
+                            " has been correctly inserted in the database.");
+                }
+                else {
+                    System.out.println("\tError: The person " + this.nameStr + " has the same name as the bff.");
+                    return false;
+                }
             }
             Put putPerson = new Put(this.name);
             putPerson.addColumn(FRIENDS, BFF_COL, this.bff);
