@@ -1,9 +1,12 @@
 
 package commands;
 
+import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import org.apache.hadoop.hbase.client.Table;
 import java.io.IOException;
+import java.util.List;
+
 import model.Person;
 
 /**
@@ -17,8 +20,29 @@ import model.Person;
  * added doesn't exist in the database, we create it and set its bff to the current person.
  *
  */
-@Parameters(commandDescription = "add a person to the table")
+@Parameters(commandDescription = "add a new person to the table")
 public class CommandAdd extends Command {
+
+    //Attributes that are filled by the options of the command
+    @Parameter(names = {"--firstName", "-fn"}, arity = 1, required = true, description = "name of the person, row key")
+    private String name;
+
+    @Parameter(names = {"--info:age", "-age"}, arity = 1,
+            description = "age of the person, to be inserted in column family info")
+    private Integer age;
+
+    @Parameter(names = {"--info:email", "-email"}, arity = 1,
+            description = "email of the person, to be inserted in column family info")
+    private String email;
+
+    @Parameter(names = {"--friends:bff", "-bff"}, arity = 1, required = true,
+            description = "best friend of the person, to be inserted in column family friends")
+    private String bff;
+
+    @Parameter(names = {"--friends:others", "-others"}, variableArity = true,
+            description = "other friend(s) of the person (separated by a space), to be inserted in column family friends")
+    private List<String> otherFriends;
+
 
     /**
      * Constructor
@@ -35,11 +59,11 @@ public class CommandAdd extends Command {
      * @param person person to be added
      * @throws IOException
      */
-    protected void fillModifiedFields(Person person) throws IOException {
+    private void fillModifiedFields(Person person) throws IOException {
         if(email != null && !email.trim().isEmpty())
             person.setEmail(email);
-        if(age != 0)
-            person.setAge(age);
+        if(age != null)
+            person.setAge(String.valueOf(age));
         if(otherFriends != null && !otherFriends.isEmpty())
             person.setOthers(otherFriends);
     }
@@ -50,9 +74,18 @@ public class CommandAdd extends Command {
      * Adds a new person to the table
      */
     public boolean execute() throws IOException {
-        Person person = new Person(this.name, this.bff, table);
-        fillModifiedFields(person);
-        return person.addPerson();
+        if(!name.trim().isEmpty() && !bff.trim().isEmpty()) {
+            Person person = new Person(this.name, this.bff, table);
+            fillModifiedFields(person);
+            return person.addPerson();
+        }
+        else{
+            System.out.println("Error: Invalid option argument.\n");
+            return false;
+
+        }
+
+
     }
 
 }

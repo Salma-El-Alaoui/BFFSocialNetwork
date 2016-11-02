@@ -1,7 +1,6 @@
 package cli;
 
-import commands.Command;
-import commands.CommandAdd;
+import commands.*;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
 
@@ -24,6 +23,16 @@ import java.util.Scanner;
  */
 public final class Prompt {
 
+    //Constants
+    static private final String TABLE_NAME = "BFF_salma";
+    static private final String CONF_FILE = "/etc/hbase/conf/hbase-site.xml";
+    static private final String ADD = "add";
+    static private final String GET = "get";
+    static private final String CHECK ="check";
+    static private final String HELP = "help";
+    static private final String EXIT = "exit";
+    static private final String SEP_ARGS = " ";
+
     private Connection connection;
     private Configuration configuration;
 
@@ -31,7 +40,7 @@ public final class Prompt {
 
         configuration = HBaseConfiguration.create();
         //Adding HBase configuration file
-        configuration.addResource(new Path("/etc/hbase/conf/hbase-site.xml"));
+        configuration.addResource(new Path(CONF_FILE));
     }
 
     /**
@@ -53,48 +62,83 @@ public final class Prompt {
         connection.close();
     }
 
+    private void displayMenu(Table table) {
+        JCommander commander = new JCommander();
+        commander.addCommand(ADD, new CommandAdd(table));
+        commander.addCommand(GET, new CommandGet(table));
+        commander.addCommand(CHECK, new CommandCheck(table));
+        commander.addCommand(HELP, new Help(commander));
+        commander.addCommand(EXIT, new Exit());
+
+        System.out.println("Welcome to the BFF Social Network Manager!\n");
+        System.out.println("----------------------Possible Commands--------------------\n");
+        commander.usage(ADD);
+        commander.usage(GET);
+        commander.usage(CHECK);
+        commander.usage(HELP);
+        commander.usage(EXIT);
+        System.out.println("---------------------------------------------------------\n");
+    }
+
     /**
      * Runs the prompt which allows the user to fill the table
      * The user keeps entering commands until he exits (through the command exit)
      * The values of the options of the commands are case insensitive
      */
     public void run() {
-        Boolean exit = false;
-
         try {
-            Table table = connectToTable("BFF_salma");
+
+            Table table = connectToTable(TABLE_NAME);
+            displayMenu(table);
+
             Map<String, Command> commands = new HashMap<String, Command>();
             //adds all possible commands
-            commands.put("add", new CommandAdd(table));
-            System.out.println("\nWelcome\n");
+            commands.put(ADD, new CommandAdd(table));
+            commands.put(GET, new CommandGet(table));
+            commands.put(CHECK, new CommandCheck(table));
 
             Scanner scanner = new Scanner(System.in);
             while (scanner.hasNextLine()) {
+
                 //create a new commander for each new line entered by the user
                 JCommander commander = new JCommander();
                 //adds all the possible commands to the commander
                 for (Map.Entry<String, Command> command : commands.entrySet()) {
                     commander.addCommand(command.getKey(), command.getValue());
                 }
+
+                //add command for help
+                Help help = new Help(commander);
+                commander.addCommand(HELP, help);
+                commander.addCommand(EXIT, new Exit());
+
                 try {
-                    String[] asArgs = scanner.nextLine().split(" ");
+                    String[] asArgs = scanner.nextLine().split(SEP_ARGS);
                     commander.parse(asArgs);
                 } catch (ParameterException pe) {
                     System.err.println(pe.getLocalizedMessage());
+                    continue;
+                }
+                if(null == commander.getParsedCommand()) {
                     commander.usage();
                     continue;
                 }
-                if (null == commander.getParsedCommand()) {
-                    commander.usage();
+                if(HELP.equals(commander.getParsedCommand())) {
+                    help.usage();
                     continue;
+                }
+                if(EXIT.equals(commander.getParsedCommand())){
+                    closeConnection(table);
+                    System.out.println("See you later!\n");
+                    break;
                 }
                 Command command = commands.get(commander.getParsedCommand());
                 try {
                     //execute the command that was parsed
                     if (command.execute()) {
-                        System.out.println("commands.Command succeeded. You may enter your next command\n");
+                        System.out.println("Command succeeded. You may enter your next command.\n");
                     } else {
-                        System.out.println("commands.Command failed. You may enter your next command\n");
+                        System.out.println("Command failed. You may enter your next command.\n");
                     }
 
                 } catch (IOException e) {
