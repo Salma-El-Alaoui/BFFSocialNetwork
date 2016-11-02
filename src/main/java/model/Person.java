@@ -141,8 +141,7 @@ public class Person {
      */
     public boolean addPerson() throws IOException {
         if (this.exists(this.name)) {
-            System.out.println("\tError: This person already exists in the database. " +
-                    "To update its fields, use the update command instead.");
+            System.out.println("\tError: This person already exists in the database.");
             return false;
         } else {
             //if the the bff doesn't exist in the database, we create it and set its bff to the current person
