@@ -43,8 +43,9 @@ public class Person {
 
     /**
      * Constructor
-     * @param name row key
-     * @param bff mandatory column in family name friends
+     *
+     * @param name     row key
+     * @param bff      mandatory column in family name friends
      * @param newTable Hbase table
      */
     public Person(String name, String bff, Table newTable) {
@@ -57,6 +58,7 @@ public class Person {
 
     /**
      * Setter for the age column
+     *
      * @param age
      */
     public void setAge(int age) {
@@ -65,23 +67,26 @@ public class Person {
 
     /**
      * Setter for the email column
+     *
      * @param email
      */
-    public void setEmail(String email){
+    public void setEmail(String email) {
         this.email = toBytes(email);
     }
 
     /**
      * Setter for the bff column
+     *
      * @param bff
      */
-    public void setBff(String bff){
+    public void setBff(String bff) {
         this.bff = toBytes(bff);
     }
 
     /**
      * Setter for the other friends column. If one of the friends doesn't exist, we insert it in the database and set
      * its bff to the current person
+     *
      * @param othersList list of other friends
      * @throws IOException
      */
@@ -95,9 +100,11 @@ public class Person {
                 Put putFriend = new Put(friendName);
                 putFriend.addColumn(FRIENDS, BFF_COL, this.name);
                 this.table.put(putFriend);
-                System.out.println("The person " + friendName + " has been correctly inserted in the database.\n");
+                System.out.println("The person " + friend + " has been correctly inserted in the database.\n");
+
             }
-            friends = friends.concat(friends + this.SEP);
+            friends = friends.concat(friend + this.SEP);
+            System.out.println(friends);
         }
         this.others = toBytes(friends);
     }
@@ -114,18 +121,18 @@ public class Person {
 
     /**
      * inserts a person in the table
+     *
      * @return true if the insertion goes well, false if the person already exists in the database
      * @throws IOException
      */
     public boolean addPerson() throws IOException {
-        if(this.exists(this.name)){
+        if (this.exists(this.name)) {
             System.out.println("This person already exists in the database. " +
                     "To update its fields, use the update command instead.\n");
             return false;
-        }
-        else {
-                //if the the bff doesn't exist in the database, we create it and set its bff to the current person
-                if (!this.exists(this.bff)){
+        } else {
+            //if the the bff doesn't exist in the database, we create it and set its bff to the current person
+            if (!this.exists(this.bff)) {
                 Put putBff = new Put(this.bff);
                 putBff.addColumn(FRIENDS, BFF_COL, this.name);
                 this.table.put(putBff);
@@ -133,13 +140,13 @@ public class Person {
             }
             Put putPerson = new Put(this.name);
             putPerson.addColumn(FRIENDS, BFF_COL, this.bff);
-            if (this.others != null) {
+            if (this.others != null && this.others.length != 0) {
                 putPerson.addColumn(FRIENDS, OTHERS_COL, this.others);
             }
-            if (this.age != null) {
+            if (this.age != null && this.age.length != 0) {
                 putPerson.addColumn(INFO, AGE_COL, this.age);
             }
-            if (this.email != null) {
+            if (this.email != null && this.email.length != 0) {
                 putPerson.addColumn(INFO, EMAIL_COL, this.email);
             }
             table.put(putPerson);

@@ -14,7 +14,7 @@ abstract class Command {
 
     protected static Table table;
 
-    public Command(Table newTable){
+    public Command(Table newTable) {
         table = newTable;
     }
 
@@ -23,7 +23,7 @@ abstract class Command {
 
 
 @Parameters(commandDescription = "add a person to the table")
-class CommandAdd extends Command{
+class CommandAdd extends Command {
 
     @Parameter(names = {"--firstName", "-fn"}, arity = 1, required = true, description = "name of the person")
     private String name;
@@ -40,20 +40,29 @@ class CommandAdd extends Command{
             description = "best friend of the person, to be inserted in column family friends")
     private String bff;
 
-    @Parameter(names = {"--friends:others", "-others"},
+    @Parameter(names = {"--friends:others", "-others"}, variableArity = true,
             description = "other friend of the person, to be inserted in column family friends")
     private List<String> otherFriends;
 
-    public CommandAdd(Table table){
+    public CommandAdd(Table table) {
         super(table);
+    }
+
+
+    protected void fillModifiedFields(Person person) throws IOException{
+        if(email != null && !email.trim().isEmpty())
+            person.setEmail(email);
+        if(age != 0)
+            person.setAge(age);
+       if(otherFriends != null && !otherFriends.isEmpty())
+           person.setOthers(otherFriends);
     }
 
     @Override
     public boolean execute() throws IOException {
         Person person = new Person(this.name, this.bff, table);
-        //TODO: if validate fields, add them to the object
-        person.addPerson();
-        return true;
+        fillModifiedFields(person);
+        return person.addPerson();
     }
 
 }

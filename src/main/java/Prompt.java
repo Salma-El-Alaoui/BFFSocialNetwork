@@ -38,7 +38,7 @@ public final class Prompt {
         return table;
     }
 
-    private void closeConnection(Table table) throws IOException{
+    private void closeConnection(Table table) throws IOException {
         table.close();
         connection.close();
     }
@@ -71,19 +71,17 @@ public final class Prompt {
                 }
                 Command command = commands.get(commander.getParsedCommand());
                 try {
-                    if(command.execute()) {
+                    if (command.execute()) {
                         System.out.println("Command succeeded. You may enter your next command\n");
-                    }
-                    else {
+                    } else {
                         System.out.println("Command failed. You may enter your next command\n");
                     }
 
-                } catch(IOException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-        }
-        catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
