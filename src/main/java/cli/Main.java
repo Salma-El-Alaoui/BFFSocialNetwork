@@ -1,3 +1,5 @@
+package cli;
+
 /**
  * Created by salma on 02/11/2016.
  */

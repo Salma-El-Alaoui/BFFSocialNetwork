@@ -1,7 +1,4 @@
-/**
- * Created by salma on 01/11/2016.
- * Person class which represents the person object, and provides methods to manage it in the database
- */
+package model;
 
 import org.apache.hadoop.hbase.client.Get;
 import org.apache.hadoop.hbase.client.Put;
@@ -13,6 +10,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Created by salma on 01/11/2016.
+ * The Person class represents the person that is stored in the database, and provides methods to manage it
+ */
 public class Person {
 
     //Hbase Table
@@ -56,32 +57,33 @@ public class Person {
         this.table = newTable;
     }
 
+
     /**
      * Setter for the age column
-     *
      * @param age
      */
     public void setAge(int age) {
         this.age = Bytes.toBytes(age);
     }
 
+
     /**
      * Setter for the email column
-     *
      * @param email
      */
     public void setEmail(String email) {
         this.email = toBytes(email);
     }
 
+
     /**
      * Setter for the bff column
-     *
      * @param bff
      */
     public void setBff(String bff) {
         this.bff = toBytes(bff);
     }
+
 
     /**
      * Setter for the other friends column. If one of the friends doesn't exist, we insert it in the database and set
@@ -120,8 +122,8 @@ public class Person {
 
 
     /**
-     * inserts a person in the table
-     *
+     * Inserts a person in the table
+     * We check the modified attributes of the person object to set the values of the columns in the database
      * @return true if the insertion goes well, false if the person already exists in the database
      * @throws IOException
      */
@@ -156,6 +158,11 @@ public class Person {
         }
     }
 
+    /**
+     * Converts string to a byte array, after lowercasing it removing trailing spaces
+     * @param string
+     * @return byte array
+     */
     private byte[] toBytes(String string) {
         return Bytes.toBytes(string.toLowerCase().trim());
     }
