@@ -4,17 +4,15 @@ Build
 -----
 ```
 mvn clean package
-
 ```
 Use `BFFSocialNetwork-1.0-SNAPSHOT-jar-with-dependencies.jar` which contains
 all the dependencies of the project. 
 
-Otherwise you can find the jar [here] (https://github.com/Salma-El-Alaoui//BFFSocialNetwork/releases)
+Otherwise you can find the jar [here](https://github.com/Salma-El-Alaoui//BFFSocialNetwork/releases).
 
 Usage
 -----
 Mandatory options are indicated with a star.
-
 ```
 java -jar BFFSocialNetwork-1.0-SNAPSHOT-jar-with-dependencies.jar
 
@@ -58,13 +56,13 @@ Usage: exit [options]
 
 Description
 -----------
-- Hbase table **BFF_salma** previously exists and has the column 
-families **friends** and **info**.
-- The first name of the person is the row id and it's **unique**. 
+- Hbase table **BFF_salma** previously exists and has the column families **friends** and **info**.
+- Each row represents a person.
+- The first name of the person is the **row id** and it's **unique**. 
 - The **bff** column in the family *friends* is mandatory.
 - Optional columns are:
-    - in family info : *age* and *email* 
-    - in family friends : *others* (other friends of the person)
+    - in family info : **age** and **email** 
+    - in family friends : **others** (other friends of the person)
 - [Consistency] If the *bff* or *others* of the person currently being added to the table do not exist, we add them to the table and set their bff to the current person.
 
 
