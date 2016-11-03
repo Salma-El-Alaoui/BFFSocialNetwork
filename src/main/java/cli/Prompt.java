@@ -71,6 +71,7 @@ public final class Prompt {
         commander.addCommand(EXIT, new Exit());
 
         System.out.println("Welcome to the BFF Social Network Manager!\n");
+        System.out.println("Usage: [command] [command options]");
         System.out.println("----------------------Possible Commands--------------------\n");
         commander.usage(PUT);
         commander.usage(GET);
