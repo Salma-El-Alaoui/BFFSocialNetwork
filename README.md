@@ -10,8 +10,6 @@ mvn clean package
 Use `BFFSocialNetwork-1.0-SNAPSHOT-jar-with-dependencies.jar` which contains
 all the dependencies of the project. 
 
-Otherwise you can find the jar [here](https://github.com/Salma-El-Alaoui//BFFSocialNetwork/releases).
-
 Usage
 -----
 Mandatory options are indicated with a star.
