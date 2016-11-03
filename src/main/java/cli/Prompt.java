@@ -1,6 +1,6 @@
 package cli;
 
-import commands.*;
+import cli.commands.*;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
 
@@ -85,7 +85,7 @@ public final class Prompt {
     /**
      * Runs the prompt which allows the user to fill the table
      * The user keeps entering commands until he exits (through the command exit)
-     * The values of the options of the commands are case insensitive
+     * The values of the options of the cli.commands are case insensitive
      */
     public void run() {
         try {

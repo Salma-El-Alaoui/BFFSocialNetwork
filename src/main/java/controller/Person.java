@@ -1,4 +1,4 @@
-package model;
+package controller;
 
 import org.apache.hadoop.hbase.CellUtil;
 import org.apache.hadoop.hbase.client.Get;

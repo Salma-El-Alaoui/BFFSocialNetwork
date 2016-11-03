@@ -1,4 +1,4 @@
-package commands;
+package cli.commands;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;

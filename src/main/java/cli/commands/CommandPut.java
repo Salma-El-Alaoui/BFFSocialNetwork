@@ -1,5 +1,5 @@
 
-package commands;
+package cli.commands;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
@@ -7,7 +7,7 @@ import org.apache.hadoop.hbase.client.Table;
 import java.io.IOException;
 import java.util.List;
 
-import model.Person;
+import controller.Person;
 
 /**
  * Created by salma on 02/11/2016.

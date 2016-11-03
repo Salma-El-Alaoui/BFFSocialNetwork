@@ -1,12 +1,12 @@
 
-package commands;
+package cli.commands;
 
 import org.apache.hadoop.hbase.client.Table;
 import java.io.IOException;
 
 /**
  * Created by salma on 02/11/2016.
- * This abstract class models the commands which are provided by the command line tool
+ * This abstract class models the cli.commands which are provided by the command line tool
  */
 public abstract class Command {
 
