@@ -7,7 +7,7 @@ Build
 ```
 mvn clean package
 ```
-Use `BFFSocialNetwork-1.0-SNAPSHOT-jar-with-dependencies.jar` which contains
+Use `target/BFFSocialNetwork-1.0-SNAPSHOT-jar-with-dependencies.jar` which contains
 all the dependencies of the project. 
 
 Usage
