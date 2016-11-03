@@ -1,6 +1,6 @@
 # BFFSocialNetwork
 
-Manage a social network in a Hbase table.
+Manage a social network in a HBase table.
 
 Build
 -----
