@@ -1,5 +1,7 @@
 # BFFSocialNetwork
 
+Manage a social network in a Hbase table.
+
 Build
 -----
 ```
