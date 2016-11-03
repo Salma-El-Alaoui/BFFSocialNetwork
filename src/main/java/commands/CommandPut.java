@@ -11,17 +11,17 @@ import model.Person;
 
 /**
  * Created by salma on 02/11/2016.
- * The add command allows the user to insert a new person in the table
+ * The put command allows the user to insert a new person in the table or updates an existing one.
  * The mandatory fields are the firstname of the person, which is the row key, and the bff of the person, which is
  * stored in the column family friends
  * Other fields are optional
  * To guarantee the consistency of the database:
  * if a bff or an other friend of the person that is currently
  * added doesn't exist in the database, we create it and set its bff to the current person.
- *
+ * Since the row ids are unique, a person can't have the same name as the bff.
  */
-@Parameters(commandDescription = "add a new person to the table")
-public class CommandAdd extends Command {
+@Parameters(commandDescription = "adds a new person to the table or updates an existing one")
+public class CommandPut extends Command {
 
     //Attributes that are filled by the options of the command
     @Parameter(names = {"--firstName", "-fn"}, arity = 1, required = true, description = "name of the person, row key")
@@ -48,7 +48,7 @@ public class CommandAdd extends Command {
      * Constructor
      * @param table Hbase table where the operations are made
      */
-    public CommandAdd(Table table) {
+    public CommandPut(Table table) {
         super(table);
     }
 
@@ -71,13 +71,13 @@ public class CommandAdd extends Command {
 
     @Override
     /**
-     * Adds a new person to the table
+     * Adds or updates a person in the table
      */
     public boolean execute() throws IOException {
         if(!name.trim().isEmpty() && !bff.trim().isEmpty()) {
             Person person = new Person(this.name, this.bff, table);
             fillModifiedFields(person);
-            return person.addPerson();
+            return person.putPerson();
         }
         else{
             System.out.println("Error: Invalid option argument.\n");

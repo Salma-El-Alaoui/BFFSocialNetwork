@@ -14,10 +14,8 @@ Usage
 -----
 Mandatory options are indicated with a star.
 ```
-java -jar BFFSocialNetwork-1.0-SNAPSHOT-jar-with-dependencies.jar
-
-add a new person to the table
-Usage: add [options]
+adds a new person to the table or updates an existing one
+Usage: put [options]
   Options:
   * --firstName, -fn
        name of the person, row key
@@ -43,15 +41,14 @@ Usage: check [options]
   * --firstName, -fn
        name of the person, row key
 
-See usage of a command
+see usage of a command
 Usage: help [options]
   Options:
     --command, -cmd
        command for which you want to see the usage
 
-Exit
+exit
 Usage: exit [options]
-
 ```
 
 Description

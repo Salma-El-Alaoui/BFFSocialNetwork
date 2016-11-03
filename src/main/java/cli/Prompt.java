@@ -26,7 +26,7 @@ public final class Prompt {
     //Constants
     static private final String TABLE_NAME = "BFF_salma";
     static private final String CONF_FILE = "/etc/hbase/conf/hbase-site.xml";
-    static private final String ADD = "add";
+    static private final String PUT = "put";
     static private final String GET = "get";
     static private final String CHECK ="check";
     static private final String HELP = "help";
@@ -64,7 +64,7 @@ public final class Prompt {
 
     private void displayMenu(Table table) {
         JCommander commander = new JCommander();
-        commander.addCommand(ADD, new CommandAdd(table));
+        commander.addCommand(PUT, new CommandPut(table));
         commander.addCommand(GET, new CommandGet(table));
         commander.addCommand(CHECK, new CommandCheck(table));
         commander.addCommand(HELP, new Help(commander));
@@ -72,7 +72,7 @@ public final class Prompt {
 
         System.out.println("Welcome to the BFF Social Network Manager!\n");
         System.out.println("----------------------Possible Commands--------------------\n");
-        commander.usage(ADD);
+        commander.usage(PUT);
         commander.usage(GET);
         commander.usage(CHECK);
         commander.usage(HELP);
@@ -93,7 +93,7 @@ public final class Prompt {
 
             Map<String, Command> commands = new HashMap<String, Command>();
             //adds all possible commands
-            commands.put(ADD, new CommandAdd(table));
+            commands.put(PUT, new CommandPut(table));
             commands.put(GET, new CommandGet(table));
             commands.put(CHECK, new CommandCheck(table));
 

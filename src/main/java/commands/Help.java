@@ -2,13 +2,14 @@ package commands;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
+import com.beust.jcommander.ParameterException;
 import com.beust.jcommander.Parameters;
 
 /**
  * Created by salma on 02/11/2016.
  * Help Command
  */
-@Parameters(commandDescription = "See usage of a command")
+@Parameters(commandDescription = "see usage of a command")
 public final class Help {
 
     JCommander commander;
@@ -22,7 +23,12 @@ public final class Help {
 
     public void usage() {
         if(commandName != null) {
-            commander.usage(commandName);
+            try{
+                commander.usage(commandName);
+            }
+            catch(ParameterException pe){
+                commander.usage();
+            }
         } else {
             commander.usage();
         }

@@ -15,7 +15,7 @@ import java.util.Set;
 
 /**
  * Created by salma on 01/11/2016.
- * The Person class represents the person that is stored in the database, and provides methods to manage it
+ * The Person class represents the person that is stored in the table, and provides methods to manage it
  */
 public class Person {
 
@@ -99,7 +99,7 @@ public class Person {
 
 
     /**
-     * Setter for the other friends column. If one of the friends doesn't exist, we insert it in the database and set
+     * Setter for the other friends column. If one of the friends doesn't exist, we insert it in the table and set
      * its bff to the current person
      * @param othersList list of other friends
      * @throws IOException
@@ -109,13 +109,13 @@ public class Person {
         String friends = "";
         for (String friend : otherFriends) {
             if(!friend.trim().isEmpty()) {
-                //if the the friend doesn't exist in the database, we create it and set its bff to the current person
+                //if the the friend doesn't exist in the table, we create it and set its bff to the current person
                 byte[] friendName = toBytes(friend);
                 if (!this.exists(friendName)) {
                     Put putFriend = new Put(friendName);
                     putFriend.addColumn(FRIENDS, BFF_COL, this.name);
                     table.put(putFriend);
-                    System.out.println("\tSuccess: The person " + friend + " has been correctly inserted in the database.");
+                    System.out.println("\tSuccess: The friend " + friend + " has been correctly inserted in the table.");
                 }
                 friends = friends.concat(friend + SEP);
             }
@@ -134,47 +134,47 @@ public class Person {
 
 
     /**
-     * Inserts a person in the table
-     * We check the modified attributes of the person object to set the values of the columns in the database
-     * @return true if the insertion goes well, false if the person already exists in the database
+     * Inserts or updates person in the table
+     * We check the modified attributes of the person object to set the values of the columns in the table
+     * @return True if the insertion goes well, false if the person has the same name as the bff
      * @throws IOException
      */
-    public boolean addPerson() throws IOException {
+    public boolean putPerson() throws IOException {
+        String successMessage = "\tSuccess: The person " + this.nameStr + " has been correctly inserted in the table.";
         if (this.exists(this.name)) {
-            System.out.println("\tError: This person already exists in the database.");
-            return false;
-        } else {
-            //if the the bff doesn't exist in the database, we create it and set its bff to the current person
-            if (!this.exists(this.bff)) {
-                // we check that the bff's name is not the same as the person's name
-                if(!bffStr.equals(nameStr)) {
-                    Put putBff = new Put(this.bff);
-                    putBff.addColumn(FRIENDS, BFF_COL, this.name);
-                    table.put(putBff);
-                    System.out.println("\tSuccess: The person " + this.bffStr +
-                            " has been correctly inserted in the database.");
-                }
-                else {
-                    System.out.println("\tError: The person " + this.nameStr + " has the same name as the bff.");
-                    return false;
-                }
-            }
-            Put putPerson = new Put(this.name);
-            putPerson.addColumn(FRIENDS, BFF_COL, this.bff);
-            if (this.others != null && this.others.length != 0) {
-                putPerson.addColumn(FRIENDS, OTHERS_COL, this.others);
-            }
-            if (this.age != null && this.age.length != 0) {
-                putPerson.addColumn(INFO, AGE_COL, this.age);
-            }
-            if (this.email != null && this.email.length != 0) {
-                putPerson.addColumn(INFO, EMAIL_COL, this.email);
-            }
-            table.put(putPerson);
-            System.out.println("\tSuccess: The person " + this.nameStr + " has been correctly inserted in the database.");
-            return true;
-
+            System.out.println("\tThis person already exists in the table, the specified columns will be updated.");
+            successMessage = "\tSuccess: The person " + this.nameStr + " has been correctly updated in the table.";
         }
+        //if the the bff doesn't exist in the table, we create it and set its bff to the current person
+        if (!this.exists(this.bff)) {
+            // we check that the bff's name is not the same as the person's name
+            if(!bffStr.equals(nameStr)) {
+                Put putBff = new Put(this.bff);
+                putBff.addColumn(FRIENDS, BFF_COL, this.name);
+                table.put(putBff);
+                System.out.println("\tSuccess: The bff " + this.bffStr +
+                        " has been correctly inserted in the table.");
+            }
+            else {
+                System.out.println("\tError: The person " + this.nameStr + " has the same name as the bff.");
+                return false;
+            }
+        }
+        Put putPerson = new Put(this.name);
+        putPerson.addColumn(FRIENDS, BFF_COL, this.bff);
+        if (this.others != null && this.others.length != 0) {
+            putPerson.addColumn(FRIENDS, OTHERS_COL, this.others);
+        }
+        if (this.age != null && this.age.length != 0) {
+            putPerson.addColumn(INFO, AGE_COL, this.age);
+        }
+        if (this.email != null && this.email.length != 0) {
+            putPerson.addColumn(INFO, EMAIL_COL, this.email);
+        }
+        table.put(putPerson);
+        System.out.println(successMessage);
+        return true;
+
     }
 
 
@@ -185,7 +185,7 @@ public class Person {
      */
     public boolean getPerson() throws IOException {
         if (!this.exists(this.name)) {
-            System.out.println("\tError: This person doesn't exists in the database.");
+            System.out.println("\tError: This person doesn't exists in the table.");
             return false;
         }
         else {
@@ -213,7 +213,7 @@ public class Person {
     public boolean checkOthersConsistency() throws IOException {
 
         if (!this.exists(this.name)) {
-            System.out.println("\tError: This person doesn't exists in the database.");
+            System.out.println("\tError: This person doesn't exists in the table.");
             return false;
         }
         else {
