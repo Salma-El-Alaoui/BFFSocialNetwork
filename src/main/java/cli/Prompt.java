@@ -25,7 +25,8 @@ public final class Prompt {
 
     //Constants
     static private final String TABLE_NAME = "BFF_salma";
-    static private final String CONF_FILE = "src/main/resources/hbase-site.xml";
+    //static private final String CONF_FILE = "src/main/resources/hbase-site.xml";
+    static private final String CONF_FILE = "/etc/hbase/conf/hbase-site.xml";
     static private final String PUT = "put";
     static private final String GET = "get";
     static private final String CHECK ="check";
